@@ -2,7 +2,6 @@ import {
   EMAIL_REGEX,
   ERROR_MESSAGES,
   PASSWORD_MIN_LENGTH,
-  ERROR_MESSAGES_SHOP,
 } from '@/constants/validation';
 
 interface PasswordFormData {
@@ -54,41 +53,6 @@ export const SignUpValidate = (
     if (formData.signUpPassword !== value) {
       errorMessage = ERROR_MESSAGES.passwordMismatch;
     }
-  }
-  return errorMessage;
-};
-
-export const validateShopInfo = (id: string, value: string) => {
-  let errorMessage = '';
-
-  switch (id) {
-    case 'name':
-      if (!value) {
-        errorMessage = ERROR_MESSAGES_SHOP.shopNameRequired;
-      }
-      break;
-    case 'category':
-      if (!value) {
-        errorMessage = ERROR_MESSAGES_SHOP.categoryRequired;
-      }
-      break;
-    case 'address1':
-      if (!value) {
-        errorMessage = ERROR_MESSAGES_SHOP.addressRequired;
-      }
-      break;
-    case 'address2':
-      if (!value) {
-        errorMessage = ERROR_MESSAGES_SHOP.addressDetailRequired;
-      }
-      break;
-    case 'originalHourlyPay':
-      if (!value) {
-        errorMessage = ERROR_MESSAGES_SHOP.hourlyPayRequired;
-      }
-      break;
-    default:
-      break;
   }
   return errorMessage;
 };

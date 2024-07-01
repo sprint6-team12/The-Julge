@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'SpoqaHanSansNeo';
+  src: url(https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+}
+
+body {
+  font-family: 'SpoqaHanSansNeo';
+  @apply text-black;
+}
+
+@layer components {
+  .input-base {
+    @apply h-58px rounded-6px border-1px py-16px px-20px border-gray30;
+  }
+
+  .input-base::placeholder {
+    @apply text-16px text-gray40;
+  }
+
+  .input-base.input-error {
+    @apply border-red40 border-1px;
+  }
+
+  .input-error-message {
+    @apply text-red40 text-12px;
+  }
+
+  .modal-overlay {
+    @apply fixed top-0 left-0 w-full h-full bg-[#00000050] z-modalbackground;
+  }
+
+  .modal-container {
+    @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-modalbody;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* filter, table scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* input */
+
+input,
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    outline: none;
+  }
+}
+input::-ms-clear {
+  display: none;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear {
+  display: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: #000;
+  -webkit-box-shadow: 0 0 0px 1000px #00000000 inset;
+  box-shadow: 0 0 0px 1000px #00000000 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:autofill,
+input:autofill:hover,
+input:autofill:focus,
+input:autofill:active {
+  -webkit-text-fill-color: #000;
+  -webkit-box-shadow: 0 0 0px 1000px #00000000 inset;
+  box-shadow: 0 0 0px 1000px #00000000 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

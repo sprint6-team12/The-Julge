@@ -12,6 +12,7 @@ const uploadImageToS3 = async (url: string, fileObject: File) => {
 
 const imageAPI = async (
   fileObject: File,
+  // token = localStorage.getItem('token')
   token = localStorage.getItem('userJWT')
 ) => {
   try {

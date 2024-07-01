@@ -17,7 +17,7 @@ export default function ShopTitleSection({
         <NoData
           title="내 가게를 소개하고 공고도 등록해 보세요."
           text="내 가게 등록하기"
-          href="/shops"
+          href="/"
         />
       ) : (
         <div className="flex flex-col items-start justify-start gap-0 p-24px rounded-24px bg-red10 min-h-[358px] pc:flex-row pc:gap-31px">
