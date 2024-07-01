@@ -7,11 +7,11 @@ interface UserInput {
   type?: string;
 }
 
-interface UserInfo {
+export interface UserInfo {
   name: string;
   phone: string;
-  address: string;
-  bio: string;
+  address?: string;
+  bio?: string;
 }
 
 const userAPI = {

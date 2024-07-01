@@ -55,11 +55,11 @@ function Dropdown({
         <div className="absolute top-1/2 right-16px transform -translate-y-1/2 w-16px h-16px flex-shrink-0">
           <IconDropdown />
         </div>
-        <button className="flex w-full px-20px py-16px items-center border bg-white border-gray30 rounded-md text-base">
+        <div className="flex w-full px-20px py-16px items-center border bg-white border-gray30 rounded-md text-base">
           <span className={selectedOption ? '' : 'text-gray-400'}>
             {selectedOption || placeholder}
           </span>
-        </button>
+        </div>
         {isOpen && (
           <div className="absolute inline-flex flex-col rounded-md border-2px items-center border-gray20 bg-white shadow-md z-5 mt-8px overflow-y-auto overflow-x-hidden max-h-200px z-dropdown right-7px left-7px">
             {options.map((option) => (

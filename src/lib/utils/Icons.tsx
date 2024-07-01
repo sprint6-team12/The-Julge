@@ -28,6 +28,7 @@ import IconLocationActive from '/public/images/icon-location-inactive.svg';
 import IconSearch from '/public/images/icon-search.svg';
 import IconStatusActive from '/public/images/icon-status-active.svg';
 import IconStatusInactive from '/public/images/icon-status-inactive.svg';
+import IconPhone from '/public/images/icon-phone.svg';
 
 export {
   IconArrowUpBold,
@@ -60,4 +61,5 @@ export {
   IconSmallArrow,
   IconStatusActive,
   IconStatusInactive,
+  IconPhone,
 };

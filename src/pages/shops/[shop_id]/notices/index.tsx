@@ -10,7 +10,6 @@ export default function AddNotice() {
           공고 등록
         </span>
         <Link href="/">
-          {/* 공고리스트페이지로 이동 */}
           <IconCloseBlack aria-label="닫기" />
         </Link>
       </div>

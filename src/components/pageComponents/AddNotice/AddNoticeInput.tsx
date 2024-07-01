@@ -1,84 +1,79 @@
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import Button from '@/components/Button/Button';
 import FormGroup from '@/components/FormGroup/FormGroup';
-import ModalPrimary from '@/components/Modal/ModalPrimary';
+import ConfirmModal from '@/components/pageComponents/MyPage/ConfirmModal';
 import useModal from '@/hooks/useModal';
-import FormatUtils from '@/lib/utils/FormatUtils';
-import { AddNoticeValidation } from '@/lib/utils/InputValidation';
+import noticeAPI, { ShopNoticeData } from '@/lib/api/noticeAPI';
+import {
+  clearError,
+  hasErrors,
+  handleInputChange,
+} from '@/lib/utils/FormUtils';
+import { validateAddNoticeForm } from '@/lib/utils/InputValidation';
+import { userState } from '@/recoil/atoms/AuthAtom';
 
-export interface FormData {
-  hourlyPay: string;
-  startsAt: string;
-  workHour: number;
-  description: string;
-}
-
-export interface FormErrors {
+export interface ShopNoticeFormErrors {
   hourlyPay: string | null;
   startsAt: string | null;
-  workHour: string | null;
+  workhour: string | null;
+  description: string | null;
 }
 
-const initialFormData: FormData = {
-  hourlyPay: '',
+const initialFormData: ShopNoticeData = {
+  hourlyPay: 0,
   startsAt: '',
-  workHour: 0,
+  workhour: 0,
   description: '',
 };
 
-const initialFormErrors: FormErrors = {
+const initialFormErrors: ShopNoticeFormErrors = {
   hourlyPay: null,
   startsAt: null,
-  workHour: null,
+  workhour: null,
+  description: null,
 };
 
-const ConfirmModal = ({ ...rest }) => (
-  <ModalPrimary
-    optionType="confirm"
-    content="등록이 완료되었습니다."
-    {...rest}
-  />
-);
-
 export default function AddNoticeInput() {
+  const { shopId } = useRecoilValue(userState);
   const { openModal } = useModal();
-  const [data, setData] = useState<FormData>(initialFormData);
-  const [errors, setErrors] = useState<FormErrors>(initialFormErrors);
+  const [data, setData] = useState<ShopNoticeData>(initialFormData);
+  const [errors, setErrors] = useState<ShopNoticeFormErrors>(initialFormErrors);
 
   const handleChangeData = (
-    event:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | React.MouseEvent<HTMLButtonElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-    const { name, value } = target;
-    setData((prev) => ({
-      ...prev,
-      [name]:
-        name === 'hourlyPay'
-          ? FormatUtils.price(Number(value.replace(/,/g, '')))
-          : value,
-    }));
-
-    setErrors((prev) => ({
-      ...prev,
-      [name]: null,
-    }));
+    const { name, value } = event.target;
+    handleInputChange(setData, name, value);
+    clearError(setErrors, name as keyof ShopNoticeFormErrors);
   };
-
   const handleOpenConfirmModal = () => {
     openModal('addNoticeConfirmModal', ConfirmModal, {
-      // onConfirm: () => //공고상세페이지롤 이동
+      // onConfirm: () => // 공고 상세 페이지로 이동
     });
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const validationErrors = AddNoticeValidation(data);
-    if (Object.values(validationErrors).some((error) => error !== null)) {
+    const validationErrors = validateAddNoticeForm(data);
+    if (hasErrors(validationErrors)) {
       setErrors(validationErrors);
     } else {
-      handleOpenConfirmModal();
+      try {
+        if (typeof shopId === 'string') {
+          await noticeAPI.postShopNotice(shopId, {
+            hourlyPay: data.hourlyPay,
+            startsAt: data.startsAt,
+            workhour: data.workhour,
+            description: data.description,
+          });
+          handleOpenConfirmModal();
+        } else {
+          throw new Error('유효하지 않은 ID');
+        }
+      } catch (error) {
+        alert(error);
+      }
     }
   };
 
@@ -92,7 +87,6 @@ export default function AddNoticeInput() {
                 <FormGroup.Label htmlFor="hourlyPay">시급*</FormGroup.Label>
                 <FormGroup.InputWrapper className="flex input-base">
                   <FormGroup.InputField
-                    id="hourlyPay"
                     name="hourlyPay"
                     type="text"
                     value={data.hourlyPay}
@@ -110,6 +104,7 @@ export default function AddNoticeInput() {
                   id="startsAt"
                   name="startsAt"
                   type="datetime-local"
+                  value={data.startsAt}
                   onChange={handleChangeData}
                   className="input-base"
                 />
@@ -119,18 +114,18 @@ export default function AddNoticeInput() {
           </div>
           <div className="mb-20px w-full pc:basis-1/3">
             <FormGroup>
-              <FormGroup.Label htmlFor="workHour">업무 시간*</FormGroup.Label>
+              <FormGroup.Label htmlFor="workhour">업무 시간*</FormGroup.Label>
               <FormGroup.InputWrapper className="flex input-base">
                 <FormGroup.InputField
-                  id="workHour"
-                  name="workHour"
+                  id="workhour"
+                  name="workhour"
                   type="number"
-                  value={data.workHour}
+                  value={data.workhour}
                   onChange={handleChangeData}
                 />
                 <span className="w-40px">시간</span>
               </FormGroup.InputWrapper>
-              <FormGroup.ErrorMessage errorMessage={errors.workHour} />
+              <FormGroup.ErrorMessage errorMessage={errors.workhour} />
             </FormGroup>
           </div>
         </div>
@@ -139,6 +134,7 @@ export default function AddNoticeInput() {
           <FormGroup.InputField.Textarea
             id="description"
             name="description"
+            value={data.description}
             onChange={handleChangeData}
             placeholder="공고 설명을 입력하세요"
             className="h-153px"

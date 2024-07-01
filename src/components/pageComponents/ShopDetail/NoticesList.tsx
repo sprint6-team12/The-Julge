@@ -52,7 +52,7 @@ export default function NoticesList({
     <div className="bg-gray05">
       <div className="mx-auto w-full px-32px py-60px max-w-[1000px]">
         {currentNoticesData.length === 0 ? (
-          <NoData title="공고를 등록해보세요." text="공고 등록하기" href="/" />
+          <NoData href="/" title="공고를 등록해보세요." text="공고 등록하기" />
         ) : (
           <NoticesCardList
             title="등록한 공고"

@@ -1,34 +1,62 @@
+import { ShopNoticeFormErrors } from '@/components/pageComponents/AddNotice/AddNoticeInput';
+import { UserInfoFormErrors } from '@/components/pageComponents/MyPage/MyPageInput';
 import {
-  FormData,
-  FormErrors,
-} from '@/components/pageComponents/AddNotice/AddNoticeInput';
-import { NOTICE_ERROR_MESSAGES } from '@/constants/errorMessage';
+  NOTICE_ERROR_MESSAGES,
+  MYPAGE_ERROR_MESSAGES,
+} from '@/constants/errorMessage';
+import { ShopNoticeData } from '@/lib/api/noticeAPI';
+import { UserInfo } from '@/lib/api/userAPI';
 
-export const AddNoticeValidation = (data: FormData): FormErrors => {
-  const { hourlyPay, startsAt, workHour } = data;
-  const noticeErrors: FormErrors = {
+// AddNotice 유효성 검사 함수
+export const validateAddNoticeForm = (
+  data: ShopNoticeData
+): ShopNoticeFormErrors => {
+  const { hourlyPay, startsAt, workhour } = data;
+  const errors: ShopNoticeFormErrors = {
     hourlyPay: null,
     startsAt: null,
-    workHour: null,
+    workhour: null,
+    description: null,
   };
 
-  if (!hourlyPay || parseFloat(hourlyPay) === 0) {
-    noticeErrors.hourlyPay = NOTICE_ERROR_MESSAGES.HOURLY_PAY_REQUIRED;
+  if (!hourlyPay || hourlyPay === 0) {
+    errors.hourlyPay = NOTICE_ERROR_MESSAGES.HOURLY_PAY_REQUIRED;
+  } else if (hourlyPay <= 1000) {
+    errors.hourlyPay = NOTICE_ERROR_MESSAGES.HOURLY_PAY_TOO_LOW;
   }
   if (!startsAt) {
-    noticeErrors.startsAt = NOTICE_ERROR_MESSAGES.STARTS_AT_REQUIRED;
+    errors.startsAt = NOTICE_ERROR_MESSAGES.STARTS_AT_REQUIRED;
   } else {
     const startsAtDate = new Date(startsAt);
-
     if (startsAtDate < new Date()) {
-      noticeErrors.startsAt = NOTICE_ERROR_MESSAGES.STARTS_AT_PAST_DATE;
+      errors.startsAt = NOTICE_ERROR_MESSAGES.STARTS_AT_PAST_DATE;
     }
   }
-  if (!workHour || workHour === 0) {
-    noticeErrors.workHour = NOTICE_ERROR_MESSAGES.WORK_HOUR_REQUIRED;
-  } else if (workHour > 24) {
-    noticeErrors.workHour = NOTICE_ERROR_MESSAGES.WORK_HOUR_EXCEEDS_LIMIT;
+  if (!workhour || workhour === 0) {
+    errors.workhour = NOTICE_ERROR_MESSAGES.WORK_HOUR_REQUIRED;
+  } else if (workhour > 24) {
+    errors.workhour = NOTICE_ERROR_MESSAGES.WORK_HOUR_EXCEEDS_LIMIT;
   }
 
-  return noticeErrors;
+  return errors;
+};
+
+// MyPage 유효성 검사 함수
+export const validateMyPageForm = (data: UserInfo): UserInfoFormErrors => {
+  const { name, phone } = data;
+  const errors: UserInfoFormErrors = {
+    name: null,
+    phone: null,
+    address: null,
+    bio: null,
+  };
+
+  if (!name) {
+    errors.name = MYPAGE_ERROR_MESSAGES.NAME_REQUIRED;
+  }
+  if (!phone) {
+    errors.phone = MYPAGE_ERROR_MESSAGES.PHONE_REQUIRED;
+  }
+
+  return errors;
 };
