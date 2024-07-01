@@ -1,11 +1,4 @@
-import ApplicantsList from './ApplicantsList';
-import NoticeDetailCard from './NoticeDetailCard';
-import NoticeDetailCardButton from './NoticeDetailCardButton';
-import RecentNoticeListSection from './RecentNoticeListSection';
+import NoticeDetailListSection from './NoticeDetailListSection';
+import NoticeDetailSection from './NoticeDetailSection';
 
-export {
-  ApplicantsList,
-  NoticeDetailCard,
-  NoticeDetailCardButton,
-  RecentNoticeListSection,
-};
+export { NoticeDetailSection, NoticeDetailListSection };

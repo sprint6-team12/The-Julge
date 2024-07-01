@@ -1,14 +1,25 @@
 import Post from '@/components/Post/Post';
-// import EmployerTable from '@/components/Table/EmployerTable';
+import EmployerTable from '@/components/Table/EmployerTable';
 
-// data 타입 정해지면 수정예정입니다
-// function ApplicantsList({ data }: { data: unknown }) {
-function ApplicantsList() {
+function EmptyApplicantsList() {
+  return (
+    <div className="flex flex-col gap-8px text-gray500 text-16px">
+      신청자가 없습니다.
+    </div>
+  );
+}
+
+function ApplicantsList({ data }: { data: ApplicationListResponseData }) {
   return (
     <>
       <Post.Title text="신청자 목록" className="mb-8px" />
+
       <div className="[&_>div]:w-full">
-        {/* <EmployerTable data={data} /> */}
+        {data.count !== 0 ? (
+          <EmployerTable data={data} />
+        ) : (
+          <EmptyApplicantsList />
+        )}
       </div>
     </>
   );

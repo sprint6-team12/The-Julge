@@ -3,12 +3,11 @@ import Post from '@/components/Post/Post';
 import FormatUtils from '@/lib/utils/FormatUtils';
 
 interface NoticeDetailCardProps {
-  item: Notice;
-  user: User | null;
+  data: NoticeItem;
 }
 
-function NoticeDetailCard({ item, user }: NoticeDetailCardProps) {
-  if (!('shop' in item)) return null;
+function NoticeDetailCard({ data }: NoticeDetailCardProps) {
+  if (!('shop' in data.item)) return null;
 
   const {
     hourlyPay,
@@ -17,9 +16,8 @@ function NoticeDetailCard({ item, user }: NoticeDetailCardProps) {
     closed,
     shop,
     currentUserApplication,
-  } = item;
+  } = data.item;
   const { address1, imageUrl, description, originalHourlyPay } = shop.item;
-  const userType = user?.type || 'guest';
 
   const isPassed = new Date() > new Date(startsAt);
   const currentNoticeState = closed ? 'closed' : isPassed ? 'passed' : 'open';
@@ -59,11 +57,11 @@ function NoticeDetailCard({ item, user }: NoticeDetailCardProps) {
         <Post.Location address={address1} status={currentNoticeState} />
         <p className="mt-12px mb-24px">{description}</p>
 
-        <div className="flex flex-col w-full h-full [&_>button]:px-0 [&_>button]:w-full pc:[&_>button]:flex-grow-0 pc:[&_>button]:px-136px pc:[&_>button]:py-14px pc:[&_>button]:mt-auto">
+        <div className="flex flex-col w-full h-full [&_>button]:px-0 [&_>button]:w-full pc:[&_>button]:flex-grow-0 pc:[&_>button]:flex-center pc:[&_>button]:mt-auto">
           <NoticeDetailCardButton
             noticeState={currentNoticeState}
-            userType={userType}
             userApplicationState={currentUserApplicationState}
+            links={data.links}
           />
         </div>
       </div>

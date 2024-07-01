@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import Post from '@/components/Post/Post';
 import PostCard from '@/components/Post/PostCard';
+import useMediaQuery from '@/lib/utils/useMediaQuery';
 
-function RecentNoticeListSection({ noticeList }: { noticeList: Notice[] }) {
+function RecentNoticeListSection({ list }: { list: Notice[] }) {
   return (
     <>
       <Post.Title text="최근에 본 공고" className="mb-24px" />
       <div className="flex flex-wrap gap-8px tablet:gap-14px pc:gap-14px w-full">
-        <RecentNoticeList noticeList={noticeList} />
+        <RecentNoticeList list={list} />
       </div>
     </>
   );
@@ -21,11 +22,13 @@ function EmptyNoticeListComponent() {
   );
 }
 
-function RecentNoticeList({ noticeList }: { noticeList: Notice[] }) {
-  if (noticeList.length === 0) return <EmptyNoticeListComponent />;
+function RecentNoticeList({ list }: { list: Notice[] }) {
+  const { isMobile } = useMediaQuery();
+
+  if (list.length === 0) return <EmptyNoticeListComponent />;
   return (
     <>
-      {noticeList.map((notice: Notice) => {
+      {list.map((notice: Notice) => {
         if (!('shop' in notice)) return;
 
         const shopId = notice.shop.item.id.toString();
@@ -39,9 +42,9 @@ function RecentNoticeList({ noticeList }: { noticeList: Notice[] }) {
             className="w-[calc(50%-8px)] pc:w-[calc(33.33333%-10px)]"
           >
             <PostCard
-              key={notice.id}
               noticeData={notice}
               shopData={notice.shop.item}
+              bgNone={isMobile}
             />
           </Link>
         );
