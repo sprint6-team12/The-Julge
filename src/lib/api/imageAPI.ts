@@ -12,8 +12,7 @@ const uploadImageToS3 = async (url: string, fileObject: File) => {
 
 const imageAPI = async (
   fileObject: File,
-  // token = localStorage.getItem('token')
-  token: string
+  token = localStorage.getItem('token')
 ) => {
   try {
     const response = await axiosInstance.post(
