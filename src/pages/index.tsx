@@ -1,10 +1,11 @@
 import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
+//import { useRouter } from 'next/router';
 import { useState } from 'react';
-import Dropdown from '@/components/Dropdown/Dropdown';
 import Filter from '@/components/Filter/Filter';
 import Pagination from '@/components/Pagination/Pagination';
 import PostCard from '@/components/Post/PostCard';
+import SortDropdown from '@/components/SortDropdown/SortDropdown';
+import { SORT_OPTION_MAP } from '@/constants/sortOptionMap';
 import noticeAPI from '@/lib/api/noticeAPI';
 import paginationUtils from '@/lib/utils/paginationUtils';
 import useMediaQuery from '@/lib/utils/useMediaQuery';
@@ -23,8 +24,9 @@ export default function Home({
     limit,
     hasNext,
   });
+
   const { isMobile } = useMediaQuery();
-  const router = useRouter();
+  //const router = useRouter();
   paginationUtils.setValues = { limit, offset };
 
   const handlePageChange = async (page: number) => {
@@ -35,8 +37,14 @@ export default function Home({
     setNoticeData(newNoticeData);
   };
 
-  const handleSortClick = (value: string) => {
-    router.push(value);
+  const handleSortClick = async (value: string) => {
+    const sortValue =
+      SORT_OPTION_MAP[value as keyof typeof SORT_OPTION_MAP] || 'time';
+    const data: NoticeListResponseData = await noticeAPI.getNoticeList({
+      limit: 6,
+      sort: sortValue,
+    });
+    setNoticeData(data);
   };
 
   const fetchFilterData = async (params: URLSearchParams) => {
@@ -82,13 +90,11 @@ export default function Home({
             <h1 className="mb-16px tablet:mb-32px pc:mb-32px text-20px tablet:text-28px pc:text-28px font-bold">
               전체 공고
             </h1>
-            <div className="filter_container flex items-center mb-16px">
-              <Dropdown
-                options={['마감임박순', '시급많은순', '시간적은순', '가나다순']}
-                onSelect={handleSortClick}
-                width="w-105px"
-              />
-              <Filter onApplyFilters={fetchFilterData} />
+            <div className="flex items-center mb-16px gap-10px">
+              <SortDropdown onClick={handleSortClick} />
+              <div className="[&_>button]:m-0">
+                <Filter onApplyFilters={fetchFilterData} />
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap gap-8px tablet:gap-14px">
